@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма ввода данных</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-container, .saved-data-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 45%;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .saved-data-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .saved-data-container h3 {
+            margin-top: 0;
+        }
+        .data-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+    
+    <div class="button-container">
+        <button class="redirect-button" onclick="redirectToSecondSite()">Калькулятор</button>
+        <button onclick="changeBackgroundColor()">Изменить цвет фона</button>
+    </div>
+
+    <script>
+        function redirectToSecondSite() {
+            window.location.href = 'calcul.html'; // Замените URL на URL второго сайта
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function changeBackgroundColor() {
+            document.body.style.backgroundColor = getRandomColor();
+        }
+    </script>
+
+
+
+
+
+    <p align="center">
+        <img src="https://media1.tenor.com/m/0S_x0XEob5wAAAAd/derzko69-derzko69happy.gif">
+    </p>
+    <div class="container">
+        <div class="form-container">
+            <h2>Форма ввода данных</h2>
+            <form id="userForm" onsubmit="return saveData()">
+                <div class="form-group">
+                    <label for="lastName">Фамилия:</label>
+                    <input type="text" id="lastName" name="lastName" required oninput="validateText(this)">
+                </div>
+                <div class="form-group">
+                    <label for="firstName">Имя:</label>
+                    <input type="text" id="firstName" name="firstName" required oninput="validateText(this)">
+                </div>
+                <div class="form-group">
+                    <label for="age">Возраст:</label>
+                    <input type="text" id="age" name="age" required oninput="validateNumber(this)">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Пол:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="мужской">Мужской</option>
+                        <option value="женский">Женский</option>
+                        <option value="пока не решил">Пока не решил)))</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Сохранить">
+                </div>
+            </form>
+        </div>
+        <div class="saved-data-container">
+            <h3>Сохраненные данные</h3>
+            <div id="savedData"></div>
+        </div>
+    </div>
+
+    <script>
+        function validateText(input) {
+            input.value = input.value.replace(/[0-9]/g, '');
+        }
+
+        function validateNumber(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+        function saveData() {
+            var lastName = document.getElementById('lastName').value;
+            var firstName = document.getElementById('firstName').value;
+            var age = document.getElementById('age').value;
+            var gender = document.getElementById('gender').value;
+
+            if (lastName === '' || firstName === '' || age === '') {
+                alert('Пожалуйста, заполните все поля.');
+                return false;
+            }
+
+            if (isNaN(age) || age < 0) {
+                alert('Введите корректный возраст.');
+                return false;
+            }
+
+            var userData = {
+                lastName: lastName,
+                firstName: firstName,
+                age: age,
+                gender: gender
+            };
+
+            // Сохраняем данные в локальное хранилище
+            var savedData = JSON.parse(localStorage.getItem('userData')) || [];
+            savedData.push(userData);
+            localStorage.setItem('userData', JSON.stringify(savedData));
+
+            // Обновляем отображение сохраненных данных
+            displaySavedData();
+
+            return false; // Предотвращаем перезагрузку страницы
+        }
+
+        function displaySavedData() {
+            var savedDataDiv = document.getElementById('savedData');
+            savedDataDiv.innerHTML = '';
+
+            var savedData = JSON.parse(localStorage.getItem('userData')) || [];
+
+            savedData.forEach(function(data, index) {
+                var dataDiv = document.createElement('div');
+                dataDiv.className = 'data-card';
+                dataDiv.innerHTML = '<strong>Фамилия:</strong> ' + data.lastName + '<br>' +
+                                    '<strong>Имя:</strong> ' + data.firstName + '<br>' +
+                                    '<strong>Возраст:</strong> ' + data.age + '<br>' +
+                                    '<strong>Пол:</strong> ' + data.gender + '<br>' +
+                                    '<button class="delete-button" onclick="deleteData(' + index + ')">Удалить</button>';
+                savedDataDiv.appendChild(dataDiv);
+            });
+        }
+
+        function deleteData(index) {
+            var savedData = JSON.parse(localStorage.getItem('userData')) || [];
+            savedData.splice(index, 1);
+            localStorage.setItem('userData', JSON.stringify(savedData));
+            displaySavedData();
+        }
+
+        // Отображаем данные при загрузке страницы
+        window.onload = function() {
+            displaySavedData();
+        }
+    </script>
+    
+</body>
+</html>

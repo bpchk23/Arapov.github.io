@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .calculator {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+        .result {
+            display: flex;
+            align-items: center;
+        }
+        .result span {
+            margin: 0 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>Калькулятор</h2>
+        <div class="form-group">
+            <label for="firstNumber">Первое число:</label>
+            <input type="number" id="firstNumber" required>
+        </div>
+        <div class="form-group">
+            <label for="operator">Операция:</label>
+            <select id="operator" required>
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="secondNumber">Второе число:</label>
+            <input type="number" id="secondNumber" required>
+        </div>
+        <div class="result">
+            <span>=</span>
+            <input type="text" id="result" readonly>
+        </div>
+        <button onclick="calculate()">Рассчитать</button>
+    </div>
+
+    <script>
+        function calculate() {
+            var firstNumber = parseFloat(document.getElementById('firstNumber').value);
+            var operator = document.getElementById('operator').value;
+            var secondNumber = parseFloat(document.getElementById('secondNumber').value);
+            var result;
+
+            if (isNaN(firstNumber) || isNaN(secondNumber)) {
+                alert('Пожалуйста, введите оба числа.');
+                return;
+            }
+
+            switch (operator) {
+                case '+':
+                    result = firstNumber + secondNumber;
+                    break;
+                case '-':
+                    result = firstNumber - secondNumber;
+                    break;
+                case '*':
+                    result = firstNumber * secondNumber;
+                    break;
+                case '/':
+                    if (secondNumber === 0) {
+                        alert('На ноль делить нельзя!');
+                        return;
+                    }
+                    result = firstNumber / secondNumber;
+                    break;
+                default:
+                    alert('Неверная операция');
+                    return;
+            }
+
+            document.getElementById('result').value = result;
+        }
+    </script>
+
+<div class="button-container">
+    <p align="center">
+    <button class="redirect-button" onclick="redirectToSecondSite()">Назад</button>
+    </p>
+</div>
+
+<script>
+    function redirectToSecondSite() {
+        window.location.href = 'index.html'; // Замените URL на URL второго сайта
+    }
+</script>
+
+
+</body>
+</html>
